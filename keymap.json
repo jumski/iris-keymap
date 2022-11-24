@@ -66,11 +66,11 @@
     ],
     [
       "KC_TILD",
-      "KC_EXLM",
-      "KC_AT",
-      "KC_HASH",
-      "KC_DLR",
-      "KC_PERC",
+      "LALT(KC_1)",
+      "LALT(KC_2)",
+      "LALT(KC_3)",
+      "LALT(KC_4)",
+      "LALT(KC_5)",
       "KC_CIRC",
       "KC_AMPR",
       "KC_ASTR",
@@ -99,7 +99,7 @@
       "KC_P4",
       "KC_P5",
       "KC_P6",
-      "KC_PLUS",
+      "LALT(KC_SCLN)",
       "KC_PIPE",
       "BL_STEP",
       "KC_TRNS",
@@ -181,7 +181,7 @@
       "KC_TRNS"
     ],
     [
-      "TO(7)",
+      "TO(4)",
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
@@ -238,7 +238,9 @@
       "KC_TRNS",
       "KC_TRNS"
     ],
-    [],
+    [
+      "KC_TRNS"
+    ],
     [],
     [],
     [
