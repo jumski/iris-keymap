@@ -13,6 +13,7 @@ enum custom_keycodes {
   RAISE,
   ADJUST,
   APEX,
+  ALT_TAB,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -33,10 +34,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_TILD, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), LALT(KC_5),             KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
-     /* KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, */
+     KC_TILD, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), LALT(KC_5),             LALT(KC_6), LALT(KC_7), LALT(KC_8), LALT(KC_9), LALT(KC_0), KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     LALT(KC_TAB), KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
+     ALT_TAB, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    LALT(KC_U), LALT(KC_I),    KC_9,    KC_0,    _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_DEL,  _______, KC_LEFT, KC_RGHT, KC_UP,   KC_LBRC,                            KC_RBRC, KC_P4,   KC_P5,   KC_P6,   LALT(KC_SCLN), KC_PIPE,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
@@ -123,14 +123,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
-    case ADJUST:
+   case ADJUST:
       if (record->event.pressed) {
-        layer_on(_ADJUST);
+         layer_on(_ADJUST);
       } else {
-        layer_off(_ADJUST);
+         layer_off(_ADJUST);
       }
       return false;
       break;
+    /* case ALT_TAB: */
+    /*   if (record->event.pressed) { */
+    /*      SEND_STRING(SS_DOWN(X_LALT)); */
+    /*      SEND_STRING(SS_TAP(X_TAB)); */
+    /*   } */
+    /*   else { */
+    /*      SEND_STRING(SS_UP(X_TAB)); */
+    /*   } */
+    /*   return false; */
+    /*   break; */
   }
   return true;
 }
