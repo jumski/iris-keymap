@@ -7,6 +7,12 @@
 #define _ADJUST 3
 #define _APEX 4
 
+#define __ KC_TRNS
+#define ___ KC_TRNS
+#define ____ KC_TRNS
+#define _____ KC_TRNS
+#define ______ KC_TRNS
+
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -36,11 +42,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_TILD, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), LALT(KC_5),             LALT(KC_6), LALT(KC_7), LALT(KC_8), LALT(KC_9), LALT(KC_0), KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     ALT_TAB, KC_1,    KC_2,   LALT(KC_E), KC_4,   KC_5,                              KC_6,    LALT(KC_U), LALT(KC_I),    KC_9,    KC_0,    KC_PLUS,
+     ALT_TAB, _______,  ______, LALT(KC_E), ____, _______,                            ____, LALT(KC_U), LALT(KC_I), ____, _______, KC_PLUS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_DEL,  _______, KC_LEFT, KC_RGHT, KC_UP,   KC_LBRC,                            KC_RBRC, KC_P4,   KC_P5,   KC_P6,   LALT(KC_SCLN), KC_PIPE,
+     KC_DEL,  _______, KC_LEFT, KC_RGHT, KC_UP,   KC_LBRC,                            KC_RBRC, _______, _______, _____, LALT(KC_SCLN), KC_PIPE,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     BL_STEP, _______, _______, _______, KC_DOWN, KC_LCBR, KC_LPRN,          KC_RPRN, KC_RCBR, KC_P1,   KC_P2,   KC_P3,   LALT(KC_DOT), KC_EQL,
+     BL_STEP, _______, _______, _______, KC_DOWN, KC_LCBR, KC_LPRN,          KC_RPRN, KC_RCBR, _______, ______, LALT(KC_DOT), _____, KC_EQL,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, KC_DEL,                    KC_DEL,  _______, KC_P0
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
