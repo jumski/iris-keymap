@@ -1,4 +1,12 @@
 # my QMK keymap for Iris Keyboard
+ 
+## Goodies
+
+### [Caps Word](https://docs.qmk.fm/#/feature_caps_word?id=caps-word)
+
+Enabled by double-tapping left shift
+
+### Right shift tapped is ENTER
 
 ## QWERTY
 
