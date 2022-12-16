@@ -14,6 +14,7 @@
 #define ______ KC_TRNS
 
 bool is_alt_tab_active = false;
+bool is_apex_lalt_active = false;
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -22,6 +23,8 @@ enum custom_keycodes {
   ADJUST,
   APEX,
   ALT_TAB,
+  APEX_ESC,
+  APEX_LALT
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -84,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_APEX] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
+   APEX_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -92,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_M,             QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LALT, KC_LALT, KC_SPC,                    QWERTY,  QWERTY,  QWERTY
+                                  APEX_LALT, APEX_LALT, KC_SPC,                    QWERTY,  QWERTY,  QWERTY
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   )
 };
@@ -176,6 +179,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          register_code(KC_TAB);
       } else {
          unregister_code(KC_TAB);
+      }
+      break;
+   case APEX_LALT:
+      if (record->event.pressed) {
+         is_apex_lalt_active = true;
+         register_code(KC_LALT);
+      } else {
+         is_apex_lalt_active = false;
+         unregister_code(KC_LALT);
+      }
+      break;
+   case APEX_ESC:
+      if (record->event.pressed) {
+         if (!is_apex_lalt_active) {
+            register_code(KC_ESC);
+         }
+      } else {
+         unregister_code(KC_ESC);
       }
       break;
   }
