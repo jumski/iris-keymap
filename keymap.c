@@ -24,6 +24,7 @@ enum custom_keycodes {
   APEX,
   ALT_TAB,
   APEX_ESC,
+  APEX_TAB,
   APEX_LALT
 };
 
@@ -89,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
    APEX_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
+   APEX_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
@@ -197,6 +198,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          }
       } else {
          unregister_code(KC_ESC);
+      }
+      break;
+   case APEX_TAB:
+      if (record->event.pressed) {
+         if (!is_apex_lalt_active) {
+            register_code(KC_TAB);
+         }
+      } else {
+         unregister_code(KC_TAB);
       }
       break;
   }
