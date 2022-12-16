@@ -2,8 +2,8 @@
  
 ## Goodies
 
-- [Caps Word](https://docs.qmk.fm/#/feature_caps_word?id=caps-word) Enabled by double-tapping left shift
-- Right shift tapped is ENTER
+- [Caps Word](https://docs.qmk.fm/#/feature_caps_word?id=caps-word) - enabled by tapping both shifts at the same time
+- APEX layer has alt-tab and alt-esc disabled
 
 ## QWERTY
 
