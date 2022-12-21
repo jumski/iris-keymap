@@ -7,3 +7,7 @@
 
 // USB plugged into left half
 #define MASTER_LEFT
+
+/* #define RGBLIGHT_LAYERS */
+/* #undef RGBLIGHT_ANIMATIONS */
+

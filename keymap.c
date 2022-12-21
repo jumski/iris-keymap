@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-
+#include "rgblight.h"
 
 #define _QWERTY 0
 #define _LOWER 1
@@ -12,6 +12,14 @@
 #define ____ KC_TRNS
 #define _____ KC_TRNS
 #define ______ KC_TRNS
+
+// struct to store current rgb settings
+typedef struct {
+   uint8_t mode;
+   uint8_t hue;
+   uint8_t sat;
+   uint8_t val;
+} rgb_settings_t;
 
 bool is_alt_tab_active = false;
 bool is_apex_lalt_active = false;
@@ -27,6 +35,20 @@ enum custom_keycodes {
   APEX_TAB,
   APEX_LALT
 };
+
+rgb_settings_t get_current_rgb_settings(void) {
+   rgb_settings_t settings;
+   settings.mode = rgblight_get_mode();
+   settings.hue = rgblight_get_hue();
+   settings.sat = rgblight_get_sat();
+   settings.val = rgblight_get_val();
+   return settings;
+}
+ 
+void restore_rgb_settings(rgb_settings_t settings) {
+   rgblight_mode(settings.mode);
+   rgblight_sethsv(settings.hue, settings.sat, settings.val);
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -120,11 +142,29 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif
 
+rgb_settings_t previous_rgb_settings;
+
 layer_state_t layer_state_set_user(layer_state_t state) {
    if (is_alt_tab_active) {
       unregister_code(KC_LALT);
       is_alt_tab_active = false;
    }
+
+   // set keeb color to red if using apex layer
+   uint8_t layer = biton32(state);
+   switch (layer) {
+      case _APEX:
+         previous_rgb_settings = get_current_rgb_settings();
+
+         /* rgb_matrix_mode(RGBLIGHT_EFFECT_BREATHING); */
+         rgblight_mode(RGBLIGHT_MODE_BREATHING);
+         rgblight_sethsv(0, 255, 255);
+         break;
+      default:
+         restore_rgb_settings(previous_rgb_settings);
+         break;
+   }
+
    return state;
 }
 
