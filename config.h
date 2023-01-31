@@ -7,3 +7,5 @@
 
 // USB plugged into left half
 #define MASTER_LEFT
+
+#define TAPPING_TERM 175

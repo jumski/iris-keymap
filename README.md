@@ -3,7 +3,8 @@
 ## Goodies
 
 - [Caps Word](https://docs.qmk.fm/#/feature_caps_word?id=caps-word) - enabled by tapping both shifts at the same time
-- APEX layer has alt-tab and alt-esc disabled
+- APEX layer has alt-tab disabled
+- APEX layer has tap dance on ESC - one tap does nothing to prevent accidents, need to double tap
 
 ## QWERTY
 

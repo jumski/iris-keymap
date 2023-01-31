@@ -16,6 +16,11 @@
 bool is_alt_tab_active = false;
 bool is_apex_lalt_active = false;
 
+// Tap dance declarations
+enum {
+   TD_APEX_ESC = 0
+};
+
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -88,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_APEX] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-   APEX_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
+TD(TD_APEX_ESC), KC_1, KC_2,    KC_3,    KC_4,    KC_5,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
    APEX_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -128,6 +133,11 @@ layer_state_t layer_state_set_user(layer_state_t state) {
    return state;
 }
 
+// Tap dance definition
+qk_tap_dance_action_t tap_dance_actions[] = {
+   // normal escape do nothing, need to double-tap it
+   [TD_APEX_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_NO, KC_ESC)
+};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -191,15 +201,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          unregister_code(KC_LALT);
       }
       break;
-   case APEX_ESC:
-      if (record->event.pressed) {
-         if (!is_apex_lalt_active) {
-            register_code(KC_ESC);
-         }
-      } else {
-         unregister_code(KC_ESC);
-      }
-      break;
+   // commented out because of escape tap-dance experiment
+   // 
+   /* case TD_APEX_ESC: */
+   /*    if (record->event.pressed) { */
+   /*       if (!is_apex_lalt_active) { */
+   /*          register_code(TD_APEX_ESC); */
+   /*       } */
+   /*    } else { */
+   /*       unregister_code(TD_APEX_ESC); */
+   /*    } */
+   /*    break; */
    case APEX_TAB:
       if (record->event.pressed) {
          if (!is_apex_lalt_active) {
