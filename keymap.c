@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-
+#include "rgblight.h"
 
 #define _QWERTY 0
 #define _LOWER 1
@@ -13,13 +13,15 @@
 #define _____ KC_TRNS
 #define ______ KC_TRNS
 
+bool is_lalt_pressed = false;
+bool is_tab_pressed = false;
+bool is_space_pressed = false;
 bool is_alt_tab_active = false;
-bool is_apex_lalt_active = false;
+/* bool is_apex_lalt_active = false; */
 
-// Tap dance declarations
-enum {
-   TD_APEX_ESC = 0
-};
+// DBL_TAP_ESC
+uint16_t escape_timer = 0;
+bool escape_tapped = false;
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -28,10 +30,7 @@ enum custom_keycodes {
   ADJUST,
   APEX,
   ALT_TAB,
-  APEX_ESC,
-  APEX_TAB,
-  APEX_LALT,
-  APEX_SPC
+  DBL_TAP_ESC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -94,15 +93,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_APEX] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-TD(TD_APEX_ESC), KC_1, KC_2,    KC_3,    KC_4,    KC_F1,                              QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
+   DBL_TAP_ESC, KC_1,  KC_2,    KC_3,    KC_4,    KC_F1,                              QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-   APEX_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
+   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_M,             QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                  APEX_LALT, APEX_LALT, APEX_SPC,                 QWERTY,  QWERTY,  QWERTY
+                                  KC_LALT, KC_LALT, KC_SPC,                 QWERTY,  QWERTY,  QWERTY
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   )
 };
@@ -131,16 +130,46 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       unregister_code(KC_LALT);
       is_alt_tab_active = false;
    }
+
+   // Store the current RGB mode to restore it later
+   static uint8_t saved_rgb_mode;
+
+   // Apex layer handling
+   if (layer_state_cmp(state, _APEX)) {
+      // Save the current RGB mode
+      saved_rgb_mode = rgblight_get_mode();
+      // Set the RGB color to red and disable any animations
+      rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+      rgblight_sethsv(0, 255, 255);
+   } else {
+      // Restore the previous RGB mode
+      rgblight_mode(saved_rgb_mode);
+   }
+
    return state;
 }
 
-// Tap dance definition
-qk_tap_dance_action_t tap_dance_actions[] = {
-   // normal escape do nothing, need to double-tap it
-   [TD_APEX_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_NO, KC_ESC)
-};
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (IS_LAYER_ON(_APEX)) {
+    switch (keycode) {
+      case KC_LALT:
+        is_lalt_pressed = record->event.pressed;
+        break;
+      case KC_TAB:
+        if (is_lalt_pressed) {
+          is_tab_pressed = record->event.pressed;
+          return false;
+        }
+        break;
+      case KC_SPC:
+        if (is_lalt_pressed) {
+          is_space_pressed = record->event.pressed;
+          return false;
+        }
+        break;
+    }
+  }
+
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
@@ -150,7 +179,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case APEX:
       if (record->event.pressed) {
-        set_single_persistent_default_layer(_APEX);
+         layer_invert(_APEX);
+         if (layer_state_is(_APEX)) {
+            rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+            rgblight_sethsv(0, 255, 255); // Set to red color
+         } else {
+            rgblight_mode(1); // Set to the default RGB lighting mode
+            is_lalt_pressed = false;
+            is_tab_pressed = false;
+            is_space_pressed = false;
+         }
       }
       return false;
       break;
@@ -193,43 +231,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          unregister_code(KC_TAB);
       }
       break;
-   case APEX_LALT:
+   case DBL_TAP_ESC:
       if (record->event.pressed) {
-         is_apex_lalt_active = true;
-         register_code(KC_LALT);
-      } else {
-         is_apex_lalt_active = false;
-         unregister_code(KC_LALT);
-      }
-      break;
-   // commented out because of escape tap-dance experiment
-   // 
-   /* case TD_APEX_ESC: */
-   /*    if (record->event.pressed) { */
-   /*       if (!is_apex_lalt_active) { */
-   /*          register_code(TD_APEX_ESC); */
-   /*       } */
-   /*    } else { */
-   /*       unregister_code(TD_APEX_ESC); */
-   /*    } */
-   /*    break; */
-   case APEX_TAB:
-      if (record->event.pressed) {
-         if (!is_apex_lalt_active) {
-            register_code(KC_TAB);
+         if (escape_tapped && timer_elapsed(escape_timer) < TAPPING_TERM) {
+            register_code(KC_ESC);
+            unregister_code(KC_ESC);
+            escape_tapped = false;
+         } else {
+            escape_tapped = true;
+            escape_timer = timer_read();
          }
-      } else {
-         unregister_code(KC_TAB);
       }
-      break;
-   case APEX_SPC:
-      if (record->event.pressed) {
-         if (!is_apex_lalt_active) {
-            register_code(KC_SPC);
-         }
-      } else {
-         unregister_code(KC_SPC);
-      }
+      return false;
       break;
   }
   return true;
