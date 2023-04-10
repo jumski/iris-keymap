@@ -30,7 +30,8 @@ enum custom_keycodes {
   ALT_TAB,
   APEX_ESC,
   APEX_TAB,
-  APEX_LALT
+  APEX_LALT,
+  APEX_SPC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -93,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_APEX] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-TD(TD_APEX_ESC), KC_1, KC_2,    KC_3,    KC_4,    KC_5,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
+TD(TD_APEX_ESC), KC_1, KC_2,    KC_3,    KC_4,    KC_F1,                              QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
    APEX_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -101,7 +102,7 @@ TD(TD_APEX_ESC), KC_1, KC_2,    KC_3,    KC_4,    KC_5,                         
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_M,             QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,  QWERTY,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                  APEX_LALT, APEX_LALT, KC_SPC,                    QWERTY,  QWERTY,  QWERTY
+                                  APEX_LALT, APEX_LALT, APEX_SPC,                 QWERTY,  QWERTY,  QWERTY
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   )
 };
@@ -219,6 +220,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          }
       } else {
          unregister_code(KC_TAB);
+      }
+      break;
+   case APEX_SPC:
+      if (record->event.pressed) {
+         if (!is_apex_lalt_active) {
+            register_code(KC_SPC);
+         }
+      } else {
+         unregister_code(KC_SPC);
       }
       break;
   }

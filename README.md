@@ -27,7 +27,7 @@ lrwxrwxrwx    38 jumski  9 gru  2022  rules.mk -> /home/jumski/Code/iris-keymap/
 ## Goodies
 
 - [Caps Word](https://docs.qmk.fm/#/feature_caps_word?id=caps-word) - enabled by tapping both shifts at the same time
-- APEX layer has alt-tab disabled
+- APEX layer has alt-tab and alt-space disabled (via custom APEX_ prefixed keycodes)
 - APEX layer has tap dance on ESC - one tap does nothing to prevent accidents, need to double tap
 
 ## QWERTY
