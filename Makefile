@@ -14,3 +14,5 @@ download_latest:
 	gh release download --pattern '*.hex' --clobber
 	mv keebio_iris_rev6b_jumski.hex /home/jumski/qmk_firmware/.build/
 
+release:
+	./release.sh
