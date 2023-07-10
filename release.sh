@@ -16,7 +16,7 @@ fi
 latest_commit_title=$(git log --format=%B -n 1 HEAD | head -n 1)
 prev_release=$(gh release view --json tagName | jq -r '.tagName')
 version=$(echo "$prev_release" | awk -F. -v OFS=. '{$3++; print}')
-qmk_firmware_path="~/qmk_firmware/.build/keebio_iris_rev6b_jumski.*"
+qmk_firmware_path="$HOME/qmk_firmware/.build/keebio_iris_rev6b_jumski.*"
 
 echo "The following command will be executed:"
 echo
