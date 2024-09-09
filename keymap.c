@@ -135,7 +135,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 // Tap dance definition
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
    // normal escape do nothing, need to double-tap it
    [TD_APEX_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_NO, KC_ESC)
 };
