@@ -1,5 +1,8 @@
 #include QMK_KEYBOARD_H
 
+// Encoder scroll configuration
+#define SCROLL_LINES 2  // Number of lines to scroll per encoder rotation
+
 
 #define _QWERTY 0
 #define _LOWER 1
@@ -116,10 +119,26 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
          tap_code(KC_PGUP);
       }
    } else if (index == 1) {
-      if (clockwise) {
-         tap_code(KC_VOLU);
+      if (IS_LAYER_ON(_LOWER)) {
+         // Scroll opencode messages when LOWER is held
+         register_code(KC_LCTL);
+         register_code(KC_LALT);
+         for (int i = 0; i < SCROLL_LINES; i++) {
+            if (clockwise) {
+               tap_code(KC_Y);  // line up
+            } else {
+               tap_code(KC_E);  // line down
+            }
+         }
+         unregister_code(KC_LALT);
+         unregister_code(KC_LCTL);
       } else {
-         tap_code(KC_VOLD);
+         // Volume control by default
+         if (clockwise) {
+            tap_code(KC_VOLU);
+         } else {
+            tap_code(KC_VOLD);
+         }
       }
    }
    return false;
