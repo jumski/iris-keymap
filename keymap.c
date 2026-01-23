@@ -118,29 +118,29 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
       } else {
          tap_code(KC_PGUP);
       }
-   } else if (index == 1) {
-      if (IS_LAYER_ON(_LOWER)) {
-         // Scroll opencode messages when LOWER is held
-         register_code(KC_LCTL);
-         register_code(KC_LALT);
-         for (int i = 0; i < SCROLL_LINES; i++) {
-            if (clockwise) {
-               tap_code(KC_Y);  // line up
-            } else {
-               tap_code(KC_E);  // line down
-            }
-         }
-         unregister_code(KC_LALT);
-         unregister_code(KC_LCTL);
-      } else {
-         // Volume control by default
-         if (clockwise) {
-            tap_code(KC_VOLU);
-         } else {
-            tap_code(KC_VOLD);
-         }
-      }
-   }
+     } else if (index == 1) {
+        if (IS_LAYER_ON(_LOWER) || IS_LAYER_ON(_RAISE)) {
+           // Volume control when LOWER or RAISE is held
+           if (clockwise) {
+              tap_code(KC_VOLU);
+           } else {
+              tap_code(KC_VOLD);
+           }
+       } else {
+          // Scroll opencode messages by default
+          register_code(KC_LCTL);
+          register_code(KC_LALT);
+          for (int i = 0; i < SCROLL_LINES; i++) {
+             if (clockwise) {
+                tap_code(KC_Y);  // line up
+             } else {
+                tap_code(KC_E);  // line down
+             }
+          }
+          unregister_code(KC_LALT);
+          unregister_code(KC_LCTL);
+       }
+    }
    return false;
 }
 #endif
